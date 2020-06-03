@@ -3,8 +3,6 @@ package internal
 import (
 	"hash/fnv"
 	"sync"
-
-	"github.com/riobard/go-bloom"
 )
 
 // simply use Double FNV here as our Bloom Filter hash
@@ -23,7 +21,7 @@ type BloomRing struct {
 	slotPosition int
 	slotCount    int
 	entryCounter int
-	slots        []bloom.Filter
+	slots        []Filter
 	mutex        sync.RWMutex
 }
 
@@ -32,10 +30,10 @@ func NewBloomRing(slot, capacity int, falsePositiveRate float64) *BloomRing {
 	r := &BloomRing{
 		slotCapacity: capacity / slot,
 		slotCount:    slot,
-		slots:        make([]bloom.Filter, slot),
+		slots:        make([]Filter, slot),
 	}
 	for i := 0; i < slot; i++ {
-		r.slots[i] = bloom.New(r.slotCapacity, falsePositiveRate, doubleFNV)
+		r.slots[i] = New(r.slotCapacity, falsePositiveRate, doubleFNV)
 	}
 	return r
 }
